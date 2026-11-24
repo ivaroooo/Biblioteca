@@ -34,5 +34,10 @@ namespace Biblioteca
 		{
 			
 		}
+		
+		void Label4Click(object sender, EventArgs e)
+		{
+			
+		}
 	}
 }
