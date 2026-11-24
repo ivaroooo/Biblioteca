@@ -42,8 +42,8 @@ namespace Biblioteca
 			this.label2 = new System.Windows.Forms.Label();
 			this.label3 = new System.Windows.Forms.Label();
 			this.btnLogin = new System.Windows.Forms.Button();
-			this.comboBox1 = new System.Windows.Forms.ComboBox();
 			this.label4 = new System.Windows.Forms.Label();
+			this.cboRol = new System.Windows.Forms.ComboBox();
 			this.SuspendLayout();
 			// 
 			// label1
@@ -96,18 +96,6 @@ namespace Biblioteca
 			this.btnLogin.UseVisualStyleBackColor = true;
 			this.btnLogin.Click += new System.EventHandler(this.BtnLoginClick);
 			// 
-			// comboBox1
-			// 
-			this.comboBox1.FormattingEnabled = true;
-			this.comboBox1.Items.AddRange(new object[] {
-									"Bibliotecario",
-									"Administrador",
-									"Consultor"});
-			this.comboBox1.Location = new System.Drawing.Point(205, 161);
-			this.comboBox1.Name = "comboBox1";
-			this.comboBox1.Size = new System.Drawing.Size(192, 24);
-			this.comboBox1.TabIndex = 6;
-			// 
 			// label4
 			// 
 			this.label4.Location = new System.Drawing.Point(205, 129);
@@ -117,6 +105,19 @@ namespace Biblioteca
 			this.label4.Text = "Ingresar como:";
 			this.label4.Click += new System.EventHandler(this.Label4Click);
 			// 
+			// cboRol
+			// 
+			this.cboRol.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+			this.cboRol.FormattingEnabled = true;
+			this.cboRol.Items.AddRange(new object[] {
+									"Bibliotecario",
+									"Administrador",
+									"Consulta"});
+			this.cboRol.Location = new System.Drawing.Point(205, 161);
+			this.cboRol.Name = "cboRol";
+			this.cboRol.Size = new System.Drawing.Size(192, 24);
+			this.cboRol.TabIndex = 6;
+			// 
 			// MainForm
 			// 
 			this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
@@ -124,7 +125,7 @@ namespace Biblioteca
 			this.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(224)))), ((int)(((byte)(192)))));
 			this.ClientSize = new System.Drawing.Size(728, 471);
 			this.Controls.Add(this.label4);
-			this.Controls.Add(this.comboBox1);
+			this.Controls.Add(this.cboRol);
 			this.Controls.Add(this.btnLogin);
 			this.Controls.Add(this.label3);
 			this.Controls.Add(this.label2);
@@ -137,7 +138,7 @@ namespace Biblioteca
 			this.PerformLayout();
 		}
 		private System.Windows.Forms.Label label4;
-		private System.Windows.Forms.ComboBox comboBox1;
+		private System.Windows.Forms.ComboBox cboRol;
 		private System.Windows.Forms.Button btnLogin;
 		private System.Windows.Forms.Label label3;
 		private System.Windows.Forms.Label label2;
