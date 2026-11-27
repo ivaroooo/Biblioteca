@@ -11,17 +11,14 @@ namespace Biblioteca
 		{
 			InitializeComponent();
 
-			
 			this.Text = "Biblioteca - Usuario: " + SesionActual.NombreCompleto + " | Rol: " + SesionActual.Rol;
 
-			
 			dataGridView1.ReadOnly = true;
 			dataGridView1.AllowUserToAddRows = false;
 			dataGridView1.AllowUserToDeleteRows = false;
 			dataGridView1.SelectionMode = DataGridViewSelectionMode.FullRowSelect;
 			dataGridView1.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill;
 
-			
 			AplicarPermisosPorRol();
 			CargarCatalogo("");
 		}
@@ -31,7 +28,6 @@ namespace Biblioteca
 			switch (SesionActual.Rol)
 			{
 				case "Bibliotecario":
-					
 					btnPrestamos.Enabled = true;
 					btnStock.Enabled = true;
 					btnReporte.Enabled = true;
@@ -39,7 +35,6 @@ namespace Biblioteca
 					break;
 
 				case "Administrador":
-					
 					btnPrestamos.Enabled = true;
 					btnStock.Enabled = false;
 					btnReporte.Enabled = true;
@@ -116,12 +111,24 @@ namespace Biblioteca
 			login.Show();
 			this.Hide();
 		}
-		
+
 		void BtnUsuariosClick(object sender, EventArgs e)
 		{
 			UsuariosVer usuarisvista = new UsuariosVer();
-			usuarisvista.Show();
-			this.Hide();
+			usuarisvista.ShowDialog();
+		}
+
+		void BtnReporteClick(object sender, EventArgs e)
+		{
+			Reportes ventanaReportes = new Reportes();
+			ventanaReportes.ShowDialog();
+		}
+
+		void BtnPrestamosClick(object sender, EventArgs e)
+		{
+			FrmMostrador mostrador = new FrmMostrador();
+			mostrador.ShowDialog();
+			CargarCatalogo(dataGridView1.Text.Trim());
 		}
 	}
 }

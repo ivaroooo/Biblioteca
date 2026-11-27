@@ -64,7 +64,7 @@ namespace Biblioteca
 			this.btnPrestamos.TabIndex = 1;
 			this.btnPrestamos.Text = "Prestamos";
 			this.btnPrestamos.UseVisualStyleBackColor = false;
-			// 
+			this.btnPrestamos.Click += new System.EventHandler(this.BtnPrestamosClick);
 			// btnStock
 			// 
 			this.btnStock.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(192)))), ((int)(((byte)(128)))));
@@ -84,6 +84,7 @@ namespace Biblioteca
 			this.btnReporte.TabIndex = 3;
 			this.btnReporte.Text = "Reportes";
 			this.btnReporte.UseVisualStyleBackColor = false;
+			this.btnReporte.Click += new System.EventHandler(this.BtnReporteClick);
 			// 
 			// btnCerrarSesion
 			// 

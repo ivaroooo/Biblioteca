@@ -55,6 +55,8 @@
       <DependentUpon>Biblioteca.cs</DependentUpon>
     </Compile>
     <Compile Include="Conexion.cs" />
+    <Compile Include="FrmMostrador.cs" />
+    <Compile Include="FrmMostrador.Designer.cs" />
     <Compile Include="MainForm.cs" />
     <Compile Include="MainForm.Designer.cs">
       <DependentUpon>MainForm.cs</DependentUpon>
@@ -65,6 +67,10 @@
     <Compile Include="RegistroUsuarios.Designer.cs">
       <DependentUpon>RegistroUsuarios.cs</DependentUpon>
     </Compile>
+    <Compile Include="Reportes.cs" />
+    <Compile Include="Reportes.Designer.cs">
+      <DependentUpon>Reportes.cs</DependentUpon>
+    </Compile>
     <Compile Include="UsuariosVer.cs" />
     <Compile Include="UsuariosVer.Designer.cs">
       <DependentUpon>UsuariosVer.cs</DependentUpon>
@@ -74,11 +80,15 @@
     <EmbeddedResource Include="Administrador.resx">
       <DependentUpon>Biblioteca.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="FrmMostrador.resx" />
     <EmbeddedResource Include="MainForm.resx">
       <DependentUpon>MainForm.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="RegistroUsuarios.resx">
       <DependentUpon>RegistroUsuarios.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Reportes.resx">
+      <DependentUpon>Reportes.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="UsuariosVer.resx">
       <DependentUpon>UsuariosVer.cs</DependentUpon>

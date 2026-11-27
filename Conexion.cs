@@ -21,10 +21,8 @@ namespace Biblioteca
 
 	public static class ConexionDB
 	{
-		
 		private static string cadenaConexion = "Server=localhost;Database=biblioteca;Uid=root;Pwd=migatoola6;Allow User Variables=True;";
 
-		
 		public static MySqlConnection ObtenerConexion()
 		{
 			MySqlConnection conn = new MySqlConnection(cadenaConexion);
@@ -32,7 +30,6 @@ namespace Biblioteca
 			return conn;
 		}
 
-		
 		public static MySqlConnection ObtenerConexionConUsuario()
 		{
 			MySqlConnection conn = new MySqlConnection(cadenaConexion);
