@@ -8,7 +8,7 @@
  */
 namespace Biblioteca
 {
-	partial class Administrador
+	partial class VentanaPrincipal
 	{
 		/// <summary>
 		/// Designer variable used to keep track of non-visual components.
@@ -105,6 +105,7 @@ namespace Biblioteca
 			this.btnUsuarios.TabIndex = 5;
 			this.btnUsuarios.Text = "Usuarios";
 			this.btnUsuarios.UseVisualStyleBackColor = false;
+			this.btnUsuarios.Click += new System.EventHandler(this.BtnUsuariosClick);
 			// 
 			// txtBuscar
 			// 
@@ -113,7 +114,7 @@ namespace Biblioteca
 			this.txtBuscar.Size = new System.Drawing.Size(715, 22);
 			this.txtBuscar.TabIndex = 6;
 			// 
-			// Administrador
+			// VentanaPrincipal
 			// 
 			this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
 			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
@@ -126,7 +127,7 @@ namespace Biblioteca
 			this.Controls.Add(this.btnStock);
 			this.Controls.Add(this.btnPrestamos);
 			this.Controls.Add(this.dataGridView1);
-			this.Name = "Administrador";
+			this.Name = "VentanaPrincipal";
 			this.Text = "VentanaPrincipal";
 			((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).EndInit();
 			this.ResumeLayout(false);

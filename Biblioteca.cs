@@ -5,25 +5,24 @@ using MySql.Data.MySqlClient;
 
 namespace Biblioteca
 {
-	public partial class Administrador : Form
+	public partial class VentanaPrincipal : Form
 	{
-		public Administrador()
+		public VentanaPrincipal()
 		{
 			InitializeComponent();
-		}
 
-		void AdministradorLoad(object sender, EventArgs e)
-		{
+			
 			this.Text = "Biblioteca - Usuario: " + SesionActual.NombreCompleto + " | Rol: " + SesionActual.Rol;
 
+			
 			dataGridView1.ReadOnly = true;
 			dataGridView1.AllowUserToAddRows = false;
 			dataGridView1.AllowUserToDeleteRows = false;
 			dataGridView1.SelectionMode = DataGridViewSelectionMode.FullRowSelect;
 			dataGridView1.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill;
 
+			
 			AplicarPermisosPorRol();
-
 			CargarCatalogo("");
 		}
 
@@ -32,6 +31,7 @@ namespace Biblioteca
 			switch (SesionActual.Rol)
 			{
 				case "Bibliotecario":
+					
 					btnPrestamos.Enabled = true;
 					btnStock.Enabled = true;
 					btnReporte.Enabled = true;
@@ -39,6 +39,7 @@ namespace Biblioteca
 					break;
 
 				case "Administrador":
+					
 					btnPrestamos.Enabled = true;
 					btnStock.Enabled = false;
 					btnReporte.Enabled = true;
@@ -46,7 +47,6 @@ namespace Biblioteca
 					break;
 
 				case "Consulta":
-				case "Consultor":
 					btnPrestamos.Enabled = false;
 					btnStock.Enabled = false;
 					btnReporte.Enabled = false;
@@ -100,7 +100,7 @@ namespace Biblioteca
 			}
 		}
 
-		void TxtBuscarTextChanged(object sender, EventArgs e)
+		void TextBox1TextChanged(object sender, EventArgs e)
 		{
 			TextBox caja = sender as TextBox;
 			if (caja != null)
@@ -114,6 +114,13 @@ namespace Biblioteca
 			SesionActual.Cerrar();
 			MainForm login = new MainForm();
 			login.Show();
+			this.Hide();
+		}
+		
+		void BtnUsuariosClick(object sender, EventArgs e)
+		{
+			UsuariosVer usuarisvista = new UsuariosVer();
+			usuarisvista.Show();
 			this.Hide();
 		}
 	}

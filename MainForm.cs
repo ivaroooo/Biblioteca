@@ -92,7 +92,7 @@ namespace Biblioteca
 								MessageBox.Show("Bienvenido(a), " + SesionActual.NombreCompleto + "\nRol: " + SesionActual.Rol,
 								                "Acceso correcto", MessageBoxButtons.OK, MessageBoxIcon.Information);
 
-								Administrador ventanaPrincipal = new Administrador();
+								VentanaPrincipal ventanaPrincipal = new VentanaPrincipal();
 								ventanaPrincipal.FormClosed += (s, args) => this.Close();
 								ventanaPrincipal.Show();
 								this.Hide();
