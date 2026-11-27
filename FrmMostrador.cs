@@ -38,7 +38,6 @@ namespace Biblioteca
             txtCodigoBarras.Focus();
         }
 
-
         private void CargarLectores()
         {
             try
@@ -60,7 +59,6 @@ namespace Biblioteca
                 MessageBox.Show("Error al cargar lectores: " + ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
-
 
         private void txtCodigoBarras_KeyDown(object sender, KeyEventArgs e)
         {
@@ -88,7 +86,6 @@ namespace Biblioteca
 
         private void BuscarYAgregarLibro(string codigoCrudo)
         {
-            
             string codigo = codigoCrudo.Replace("\r", "").Replace("\n", "").Replace("'", "-").Trim();
             if (string.IsNullOrEmpty(codigo)) return;
 
@@ -194,7 +191,6 @@ namespace Biblioteca
             }
         }
 
-       
         private void btnConfirmarPrestamo_Click(object sender, EventArgs e)
         {
             if (cmbLector.SelectedValue == null)
@@ -278,7 +274,7 @@ namespace Biblioteca
             }
         }
 
-      
+        private void CargarPrestamosActivos(string filtro)
         {
             try
             {
