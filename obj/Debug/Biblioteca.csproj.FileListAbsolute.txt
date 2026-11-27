@@ -1,8 +1,8 @@
-C:\Users\dulma\Documents\SharpDevelop Projects\Biblioteca\Biblioteca\bin\Debug\Biblioteca.exe
-C:\Users\dulma\Documents\SharpDevelop Projects\Biblioteca\Biblioteca\bin\Debug\Biblioteca.pdb
 C:\Users\dulma\Documents\SharpDevelop Projects\Biblioteca\Biblioteca\obj\Debug\Biblioteca.csprojResolveAssemblyReference.cache
 C:\Users\dulma\Documents\SharpDevelop Projects\Biblioteca\Biblioteca\obj\Debug\Biblioteca.Administrador.resources
 C:\Users\dulma\Documents\SharpDevelop Projects\Biblioteca\Biblioteca\obj\Debug\Biblioteca.MainForm.resources
 C:\Users\dulma\Documents\SharpDevelop Projects\Biblioteca\Biblioteca\obj\Debug\Biblioteca.csproj.GenerateResource.Cache
+C:\Users\dulma\Documents\SharpDevelop Projects\Biblioteca\Biblioteca\bin\Debug\Biblioteca.exe
+C:\Users\dulma\Documents\SharpDevelop Projects\Biblioteca\Biblioteca\bin\Debug\Biblioteca.pdb
 C:\Users\dulma\Documents\SharpDevelop Projects\Biblioteca\Biblioteca\obj\Debug\Biblioteca.exe
 C:\Users\dulma\Documents\SharpDevelop Projects\Biblioteca\Biblioteca\obj\Debug\Biblioteca.pdb

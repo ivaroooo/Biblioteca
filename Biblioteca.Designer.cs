@@ -40,16 +40,19 @@ namespace Biblioteca
 			this.btnPrestamos = new System.Windows.Forms.Button();
 			this.btnStock = new System.Windows.Forms.Button();
 			this.btnReporte = new System.Windows.Forms.Button();
+			this.btnCerrarSesion = new System.Windows.Forms.Button();
+			this.btnUsuarios = new System.Windows.Forms.Button();
+			this.txtBuscar = new System.Windows.Forms.TextBox();
 			((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).BeginInit();
 			this.SuspendLayout();
 			// 
 			// dataGridView1
 			// 
 			this.dataGridView1.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-			this.dataGridView1.Location = new System.Drawing.Point(12, 12);
+			this.dataGridView1.Location = new System.Drawing.Point(12, 42);
 			this.dataGridView1.Name = "dataGridView1";
 			this.dataGridView1.RowTemplate.Height = 24;
-			this.dataGridView1.Size = new System.Drawing.Size(693, 417);
+			this.dataGridView1.Size = new System.Drawing.Size(715, 451);
 			this.dataGridView1.TabIndex = 0;
 			// 
 			// btnPrestamos
@@ -82,21 +85,56 @@ namespace Biblioteca
 			this.btnReporte.Text = "Reportes";
 			this.btnReporte.UseVisualStyleBackColor = false;
 			// 
+			// btnCerrarSesion
+			// 
+			this.btnCerrarSesion.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(128)))), ((int)(((byte)(128)))));
+			this.btnCerrarSesion.Location = new System.Drawing.Point(799, 444);
+			this.btnCerrarSesion.Name = "btnCerrarSesion";
+			this.btnCerrarSesion.Size = new System.Drawing.Size(157, 38);
+			this.btnCerrarSesion.TabIndex = 4;
+			this.btnCerrarSesion.Text = "Cerrar sesión";
+			this.btnCerrarSesion.UseVisualStyleBackColor = false;
+			this.btnCerrarSesion.Click += new System.EventHandler(this.BtnCerrarSesionClick);
+			// 
+			// btnUsuarios
+			// 
+			this.btnUsuarios.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(192)))), ((int)(((byte)(128)))));
+			this.btnUsuarios.Location = new System.Drawing.Point(799, 302);
+			this.btnUsuarios.Name = "btnUsuarios";
+			this.btnUsuarios.Size = new System.Drawing.Size(157, 38);
+			this.btnUsuarios.TabIndex = 5;
+			this.btnUsuarios.Text = "Usuarios";
+			this.btnUsuarios.UseVisualStyleBackColor = false;
+			// 
+			// txtBuscar
+			// 
+			this.txtBuscar.Location = new System.Drawing.Point(12, 18);
+			this.txtBuscar.Name = "txtBuscar";
+			this.txtBuscar.Size = new System.Drawing.Size(715, 22);
+			this.txtBuscar.TabIndex = 6;
+			// 
 			// Administrador
 			// 
 			this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
 			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
 			this.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(224)))), ((int)(((byte)(192)))));
 			this.ClientSize = new System.Drawing.Size(1029, 505);
+			this.Controls.Add(this.txtBuscar);
+			this.Controls.Add(this.btnUsuarios);
+			this.Controls.Add(this.btnCerrarSesion);
 			this.Controls.Add(this.btnReporte);
 			this.Controls.Add(this.btnStock);
 			this.Controls.Add(this.btnPrestamos);
 			this.Controls.Add(this.dataGridView1);
 			this.Name = "Administrador";
-			this.Text = "Administrador";
+			this.Text = "VentanaPrincipal";
 			((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).EndInit();
 			this.ResumeLayout(false);
+			this.PerformLayout();
 		}
+		private System.Windows.Forms.TextBox txtBuscar;
+		private System.Windows.Forms.Button btnUsuarios;
+		private System.Windows.Forms.Button btnCerrarSesion;
 		private System.Windows.Forms.Button btnReporte;
 		private System.Windows.Forms.Button btnStock;
 		private System.Windows.Forms.Button btnPrestamos;

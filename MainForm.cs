@@ -17,21 +17,15 @@ using MySql.Data.MySqlClient;
 
 namespace Biblioteca
 {
-	/// <summary>
-	/// Description of MainForm.
-	/// </summary>
 	public partial class MainForm : Form
 	{
 		public MainForm()
 		{
-			//
-			// The InitializeComponent() call is required for Windows Forms designer support.
-			//
 			InitializeComponent();
 			
-			if (comboBox1.Items.Count > 0)
+			if (cboRol.Items.Count > 0)
 			{
-				comboBox1.SelectedIndex = 0;
+				cboRol.SelectedIndex = 0;
 			}
 			this.AcceptButton = btnLogin;
 		}
@@ -52,9 +46,10 @@ namespace Biblioteca
 		
 		void BtnLoginClick(object sender, EventArgs e)
 		{
-			string rolSeleccionado = comboBox1.Text.Trim();
-			string usuario = textBox1.Text.Trim();
-			string password = textBox2.Text;
+			string rolSeleccionado = cboRol.Text.Trim();
+			string usuario = txtUsuario.Text.Trim();
+			string password = txtContraseña.Text;
+
 
 			if (string.IsNullOrEmpty(rolSeleccionado) || string.IsNullOrEmpty(usuario) || string.IsNullOrEmpty(password))
 			{
@@ -69,7 +64,7 @@ namespace Biblioteca
 			{
 				using (MySqlConnection conn = ConexionDB.ObtenerConexion())
 				{
-					using (MySqlCommand cmd = new MySqlCommand("SP_INICIAR_SESION", conn))
+					using (MySqlCommand cmd = new MySqlCommand("iniciar_sesion", conn))
 					{
 						cmd.CommandType = CommandType.StoredProcedure;
 						cmd.Parameters.AddWithValue("p_username", usuario);
@@ -80,7 +75,7 @@ namespace Biblioteca
 						{
 							if (reader.Read())
 							{
-								string estado = reader["ESTADO"].ToString();
+								string estado = reader["estado"].ToString();
 
 								if (estado != "Activo")
 								{
@@ -89,10 +84,10 @@ namespace Biblioteca
 									return;
 								}
 
-								SesionActual.IdUsuario = Convert.ToInt32(reader["ID_USUARIO"]);
-								SesionActual.NombreCompleto = reader["NOMBRE_COMPLETO"].ToString();
-								SesionActual.Username = reader["USERNAME"].ToString();
-								SesionActual.Rol = reader["ROL"].ToString();
+								SesionActual.IdUsuario = Convert.ToInt32(reader["idUsuario"]);
+								SesionActual.NombreCompleto = reader["nombre_completo"].ToString();
+								SesionActual.Username = reader["username"].ToString();
+								SesionActual.Rol = reader["rol"].ToString();
 
 								MessageBox.Show("Bienvenido(a), " + SesionActual.NombreCompleto + "\nRol: " + SesionActual.Rol,
 								                "Acceso correcto", MessageBoxButtons.OK, MessageBoxIcon.Information);
@@ -106,8 +101,8 @@ namespace Biblioteca
 							{
 								MessageBox.Show("Usuario, contraseña o rol incorrectos.",
 								                "Error de autenticación", MessageBoxButtons.OK, MessageBoxIcon.Error);
-								textBox2.Clear();
-								textBox2.Focus();
+								txtContraseña.Clear();
+								txtContraseña.Focus();
 							}
 						}
 					}
