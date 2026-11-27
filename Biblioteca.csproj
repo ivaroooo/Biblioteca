@@ -55,6 +55,10 @@
       <DependentUpon>Biblioteca.cs</DependentUpon>
     </Compile>
     <Compile Include="Conexion.cs" />
+    <Compile Include="FrmInventario.cs" />
+    <Compile Include="FrmInventario.Designer.cs">
+      <DependentUpon>FrmInventario.cs</DependentUpon>
+    </Compile>
     <Compile Include="FrmMostrador.cs" />
     <Compile Include="FrmMostrador.Designer.cs" />
     <Compile Include="MainForm.cs" />

@@ -130,5 +130,11 @@ namespace Biblioteca
 			mostrador.ShowDialog();
 			CargarCatalogo(dataGridView1.Text.Trim());
 		}
+		void BtnStockClick(object sender, EventArgs e)
+		{
+    		FrmInventario inventario = new FrmInventario();
+    		inventario.ShowDialog();
+    		CargarCatalogo(txtBuscar.Text.Trim());
+		}
 	}
 }

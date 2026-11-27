@@ -8,8 +8,6 @@ namespace Biblioteca
 {
     public partial class FrmMostrador : Form
     {
-        // Toma automáticamente los datos de la sesión iniciada en el Login,
-        // y si abres la ventana directo para probar, usa tus datos por defecto (ID 2 = bibliotecario)
         private int idUsuarioActual
         {
             get { return SesionActual.IdUsuario > 0 ? SesionActual.IdUsuario : 2; }
@@ -27,20 +25,20 @@ namespace Biblioteca
 
         private void FrmMostrador_Load(object sender, EventArgs e)
         {
-            // Configurar fecha de devolución por defecto a 7 días
             dtpFechaDevolucion.MinDate = DateTime.Today;
             dtpFechaDevolucion.Value = DateTime.Today.AddDays(7);
 
             CargarLectores();
             CargarPrestamosActivos("");
+        }
 
-            // Dejar el cursor listo para el lector de código de barras
+        // Asegura que el cursor esté listo en la caja del escáner apenas abre la ventana
+        private void FrmMostrador_Shown(object sender, EventArgs e)
+        {
             txtCodigoBarras.Focus();
         }
 
-        // ==========================================================
-        // 1. CARGAR LECTORES / ALUMNOS EN EL COMBOBOX
-        // ==========================================================
+
         private void CargarLectores()
         {
             try
@@ -63,25 +61,35 @@ namespace Biblioteca
             }
         }
 
-        // ==========================================================
-        // 2. ESCÁNER DE CÓDIGO DE BARRAS (Detecta tecla ENTER)
-        // ==========================================================
+
         private void txtCodigoBarras_KeyDown(object sender, KeyEventArgs e)
         {
-            if (e.KeyCode == Keys.Enter)
+            if (e.KeyCode == Keys.Enter || e.KeyCode == Keys.Return)
             {
                 e.SuppressKeyPress = true;
-                BuscarYAgregarLibro(txtCodigoBarras.Text.Trim());
+                e.Handled = true;
+                BuscarYAgregarLibro(txtCodigoBarras.Text);
+            }
+        }
+
+        private void txtCodigoBarras_KeyPress(object sender, KeyPressEventArgs e)
+        {
+            if (e.KeyChar == '\r' || e.KeyChar == '\n')
+            {
+                e.Handled = true;
+                BuscarYAgregarLibro(txtCodigoBarras.Text);
             }
         }
 
         private void btnBuscarManual_Click(object sender, EventArgs e)
         {
-            BuscarYAgregarLibro(txtCodigoBarras.Text.Trim());
+            BuscarYAgregarLibro(txtCodigoBarras.Text);
         }
 
-        private void BuscarYAgregarLibro(string codigo)
+        private void BuscarYAgregarLibro(string codigoCrudo)
         {
+            
+            string codigo = codigoCrudo.Replace("\r", "").Replace("\n", "").Replace("'", "-").Trim();
             if (string.IsNullOrEmpty(codigo)) return;
 
             try
@@ -107,11 +115,9 @@ namespace Biblioteca
                                     lblInfoLibro.ForeColor = Color.Red;
                                     lblInfoLibro.Text = "SIN STOCK: " + titulo;
                                     MessageBox.Show("No quedan copias disponibles de '" + titulo + "'.", "Sin Inventario", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                                    txtCodigoBarras.Clear();
                                     return;
                                 }
 
-                                // Si el libro ya está en la tabla, sumamos +1 a la cantidad
                                 bool yaExiste = false;
                                 foreach (DataGridViewRow row in dgvCarritoLibros.Rows)
                                 {
@@ -121,7 +127,6 @@ namespace Biblioteca
                                         if (cantActual + 1 > stockDisponible)
                                         {
                                             MessageBox.Show("Solo hay " + stockDisponible + " copias disponibles en total.", "Límite de Stock", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                                            txtCodigoBarras.Clear();
                                             return;
                                         }
                                         row.Cells["colCantidad"].Value = cantActual + 1;
@@ -135,7 +140,6 @@ namespace Biblioteca
                                     dgvCarritoLibros.Rows.Add(isbn, codBarras, titulo, 1);
                                 }
 
-                                // Consulta con parámetro OUT (Punto E)
                                 int copiasLibres = ConsultarCopiasDisponiblesOUT(isbn);
 
                                 lblInfoLibro.ForeColor = Color.DarkGreen;
@@ -190,9 +194,7 @@ namespace Biblioteca
             }
         }
 
-        // ==========================================================
-        // 3. CONFIRMAR PRÉSTAMO (Transacción explícita en C# + SPs)
-        // ==========================================================
+       
         private void btnConfirmarPrestamo_Click(object sender, EventArgs e)
         {
             if (cmbLector.SelectedValue == null)
@@ -212,14 +214,12 @@ namespace Biblioteca
 
             using (MySqlConnection conn = ConexionDB.ObtenerConexion())
             {
-                // Iniciamos la transacción explícita desde C#
                 MySqlTransaction transaccion = conn.BeginTransaction();
 
                 try
                 {
                     int idPrestamoGenerado = 0;
 
-                    // Paso A: Crear cabecera del préstamo dentro de la transacción
                     using (MySqlCommand cmdCabecera = new MySqlCommand("sp_crear_cabecera_prestamo", conn, transaccion))
                     {
                         cmdCabecera.CommandType = CommandType.StoredProcedure;
@@ -236,7 +236,6 @@ namespace Biblioteca
                         idPrestamoGenerado = Convert.ToInt32(outId.Value);
                     }
 
-                    // Paso B: Insertar cada libro de la tabla y descontar inventario dentro de la misma transacción
                     foreach (DataGridViewRow row in dgvCarritoLibros.Rows)
                     {
                         string codigoBarras = row.Cells["colCodigo"].Value.ToString();
@@ -254,7 +253,6 @@ namespace Biblioteca
                         }
                     }
 
-                    // Si todos los libros pasaron sin error, confirmamos toda la transacción
                     transaccion.Commit();
 
                     MessageBox.Show("Préstamo #" + idPrestamoGenerado + " registrado correctamente.\nFecha límite de entrega: " + fechaDev.ToShortDateString(),
@@ -280,10 +278,7 @@ namespace Biblioteca
             }
         }
 
-        // ==========================================================
-        // 4. CONTROL DE DEVOLUCIONES
-        // ==========================================================
-        private void CargarPrestamosActivos(string filtro)
+      
         {
             try
             {
@@ -386,10 +381,5 @@ namespace Biblioteca
                 }
             }
         }
-		
-		void LblInfoLibroClick(object sender, EventArgs e)
-		{
-			
-		}
     }
 }

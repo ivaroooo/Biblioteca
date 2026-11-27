@@ -74,6 +74,7 @@ namespace Biblioteca
 			this.btnStock.TabIndex = 2;
 			this.btnStock.Text = "Stock";
 			this.btnStock.UseVisualStyleBackColor = false;
+			this.btnStock.Click += new System.EventHandler(this.BtnStockClick);
 			// 
 			// btnReporte
 			// 

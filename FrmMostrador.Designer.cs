@@ -2,15 +2,8 @@
 {
 	partial class FrmMostrador
 	{
-		/// <summary>
-		/// Designer variable used to keep track of non-visual components.
-		/// </summary>
 		private System.ComponentModel.IContainer components = null;
 		
-		/// <summary>
-		/// Disposes resources used by the form.
-		/// </summary>
-		/// <param name="disposing">true if managed resources should be disposed; otherwise, false.</param>
 		protected override void Dispose(bool disposing)
 		{
 			if (disposing) {
@@ -21,11 +14,6 @@
 			base.Dispose(disposing);
 		}
 		
-		/// <summary>
-		/// This method is required for Windows Forms designer support.
-		/// Do not change the method contents inside the source code editor. The Forms designer might
-		/// not be able to load this method if it was changed manually.
-		/// </summary>
 		private void InitializeComponent()
 		{
 			this.tabControlMostrador = new System.Windows.Forms.TabControl();
@@ -185,7 +173,6 @@
 			this.lblInfoLibro.Size = new System.Drawing.Size(163, 23);
 			this.lblInfoLibro.TabIndex = 8;
 			this.lblInfoLibro.Text = "Listo para escanear...";
-			this.lblInfoLibro.Click += new System.EventHandler(this.LblInfoLibroClick);
 			// 
 			// btnBuscarManual
 			// 
@@ -208,8 +195,9 @@
 			this.txtCodigoBarras.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
 			this.txtCodigoBarras.Name = "txtCodigoBarras";
 			this.txtCodigoBarras.Size = new System.Drawing.Size(599, 31);
-			this.txtCodigoBarras.TabIndex = 6;
+			this.txtCodigoBarras.TabIndex = 0;
 			this.txtCodigoBarras.KeyDown += new System.Windows.Forms.KeyEventHandler(this.txtCodigoBarras_KeyDown);
+			this.txtCodigoBarras.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.txtCodigoBarras_KeyPress);
 			// 
 			// lblEscaner
 			// 
@@ -270,7 +258,7 @@
 			this.lblTituloPrestamo.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
 			this.lblTituloPrestamo.Name = "lblTituloPrestamo";
 			this.lblTituloPrestamo.Size = new System.Drawing.Size(405, 32);
-			this.lblTituloPrestamo.TabIndex = 0;
+			this.lblTituloPrestamo.TabIndex = 6;
 			this.lblTituloPrestamo.Text = "Mostrador - Registro de Préstamo";
 			// 
 			// tabDevoluciones
@@ -365,6 +353,7 @@
 			this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
 			this.Text = "Sistema de Biblioteca - Mostrador";
 			this.Load += new System.EventHandler(this.FrmMostrador_Load);
+			this.Shown += new System.EventHandler(this.FrmMostrador_Shown);
 			this.tabControlMostrador.ResumeLayout(false);
 			this.tabPrestamos.ResumeLayout(false);
 			this.tabPrestamos.PerformLayout();
