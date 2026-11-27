@@ -116,5 +116,11 @@ namespace Biblioteca
 			login.Show();
 			this.Hide();
 		}
+		
+		void BtnReporteClick(object sender, EventArgs e)
+		{
+			Reportes ventanaReportes = new Reportes();
+			ventanaReportes.ShowDialog();
+		}
 	}
 }

@@ -182,3 +182,136 @@ BEGIN
     END IF;
 END $$
 DELIMITER ;
+
+
+
+
+-- Trigger 1: Bloquear préstamo si no hay ejemplares suficientes
+DELIMITER $$
+CREATE TRIGGER trg_validar_disponibilidad_prestamo
+BEFORE INSERT ON detallesPrestamo
+FOR EACH ROW
+BEGIN
+    DECLARE v_disponibilidad INT;
+
+    SELECT disponibilidad INTO v_disponibilidad
+    FROM libro
+    WHERE isbn = NEW.isbn;
+
+    IF v_disponibilidad IS NULL THEN
+        SIGNAL SQLSTATE '45000'
+        SET MESSAGE_TEXT = 'Error: El libro especificado no existe en el catálogo.';
+    ELSEIF NEW.cantidad > v_disponibilidad THEN
+        SIGNAL SQLSTATE '45000'
+        SET MESSAGE_TEXT = 'Error: Disponibilidad insuficiente para realizar el préstamo.';
+    END IF;
+END $$
+
+DELIMITER ;
+
+-- Trigger 2: Evitar devolver un préstamo que ya fue devuelto
+DELIMITER $$
+CREATE TRIGGER trg_validar_devolucion_unica
+BEFORE UPDATE ON prestamo
+FOR EACH ROW
+BEGIN
+    IF OLD.estado = 'Devuelto' AND NEW.estado = 'Devuelto' THEN
+        SIGNAL SQLSTATE '45000'
+        SET MESSAGE_TEXT = 'Error: Este préstamo ya fue marcado como devuelto anteriormente.';
+    END IF;
+END $$
+
+DELIMITER ;
+
+
+-- Función 1: Calcular días de retraso de un préstamo
+DELIMITER $$
+CREATE FUNCTION fn_calcular_dias_retraso(p_idPrestamo INT)
+RETURNS INT
+READS SQL DATA
+BEGIN
+    DECLARE v_fecha_limite DATE;
+    DECLARE v_fecha_real DATE;
+    DECLARE v_estado VARCHAR(20);
+    DECLARE v_dias INT DEFAULT 0;
+
+    SELECT fechaDevolucion, fechaDevolucionReal, estado
+    INTO v_fecha_limite, v_fecha_real, v_estado
+    FROM prestamo
+    WHERE idPrestamo = p_idPrestamo;
+
+    IF v_estado = 'Activo' THEN
+        SET v_dias = DATEDIFF(CURDATE(), v_fecha_limite);
+    ELSEIF v_estado = 'Devuelto' AND v_fecha_real IS NOT NULL THEN
+        SET v_dias = DATEDIFF(v_fecha_real, v_fecha_limite);
+    END IF;
+
+    IF v_dias < 0 THEN
+        SET v_dias = 0;
+    END IF;
+
+    RETURN v_dias;
+END $$
+
+DELIMITER ;
+
+DELIMITER $$
+
+-- Función 2: Verificar estado de disponibilidad de un libro
+CREATE FUNCTION fn_estado_disponibilidad(p_isbn VARCHAR(20))
+RETURNS VARCHAR(30)
+READS SQL DATA
+BEGIN
+    DECLARE v_disp INT DEFAULT 0;
+
+    SELECT disponibilidad INTO v_disp
+    FROM libro
+    WHERE isbn = p_isbn;
+
+    IF v_disp <= 0 THEN
+        RETURN 'Agotado';
+    ELSEIF v_disp <= 2 THEN
+        RETURN 'Últimos ejemplares';
+    ELSE
+        RETURN 'Disponible';
+    END IF;
+END $$
+
+DELIMITER ;
+
+
+
+-- Reporte 1: Libros más prestados
+CREATE VIEW vw_libros_mas_prestados AS
+SELECT 
+    l.isbn, l.codigo_barras, l.nombre AS titulo, l.autor, l.categoria,
+    COUNT(DISTINCT p.idPrestamo) AS veces_solicitado,
+    SUM(dp.cantidad) AS total_ejemplares_prestados,
+    l.disponibilidad AS stock_actual,
+    fn_estado_disponibilidad(l.isbn) AS estatus
+FROM libro l
+INNER JOIN detallesPrestamo dp ON l.isbn = dp.isbn
+INNER JOIN prestamo p ON dp.idPrestamo = p.idPrestamo
+GROUP BY l.isbn, l.codigo_barras, l.nombre, l.autor, l.categoria, l.disponibilidad
+HAVING SUM(dp.cantidad) >= 1
+ORDER BY total_ejemplares_prestados DESC, veces_solicitado DESC;
+
+
+-- Reporte 2: Lectores con préstamos vencidos / con retraso 
+CREATE VIEW vw_prestamos_vencidos AS
+SELECT 
+    lec.credencial, CONCAT(lec.nombre, ' ', lec.apellido) AS lector, lec.correo,
+    p.idPrestamo, p.fechaPrestamo, p.fechaDevolucion AS fecha_limite,
+    fn_calcular_dias_retraso(p.idPrestamo) AS dias_retraso,
+    GROUP_CONCAT(l.nombre SEPARATOR ', ') AS libros_pendientes
+FROM lector lec
+INNER JOIN prestamo p ON lec.idLector = p.idLector
+INNER JOIN detallesPrestamo dp ON p.idPrestamo = dp.idPrestamo
+INNER JOIN libro l ON dp.isbn = l.isbn
+WHERE p.estado = 'Activo'
+GROUP BY lec.credencial, lec.nombre, lec.apellido, lec.correo, p.idPrestamo, p.fechaPrestamo, p.fechaDevolucion
+HAVING dias_retraso > 0
+ORDER BY dias_retraso DESC;
+
+
+

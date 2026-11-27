@@ -6,3 +6,12 @@ C:\Users\dulma\Documents\SharpDevelop Projects\Biblioteca\Biblioteca\bin\Debug\B
 C:\Users\dulma\Documents\SharpDevelop Projects\Biblioteca\Biblioteca\bin\Debug\Biblioteca.pdb
 C:\Users\dulma\Documents\SharpDevelop Projects\Biblioteca\Biblioteca\obj\Debug\Biblioteca.exe
 C:\Users\dulma\Documents\SharpDevelop Projects\Biblioteca\Biblioteca\obj\Debug\Biblioteca.pdb
+C:\Users\Miguel Rico\Documents\SharpDevelop Projects\Biblioteca Proyecto\Biblioteca\bin\Debug\Biblioteca.exe
+C:\Users\Miguel Rico\Documents\SharpDevelop Projects\Biblioteca Proyecto\Biblioteca\bin\Debug\Biblioteca.pdb
+C:\Users\Miguel Rico\Documents\SharpDevelop Projects\Biblioteca Proyecto\Biblioteca\obj\Debug\Biblioteca.csprojResolveAssemblyReference.cache
+C:\Users\Miguel Rico\Documents\SharpDevelop Projects\Biblioteca Proyecto\Biblioteca\obj\Debug\Biblioteca.Administrador.resources
+C:\Users\Miguel Rico\Documents\SharpDevelop Projects\Biblioteca Proyecto\Biblioteca\obj\Debug\Biblioteca.MainForm.resources
+C:\Users\Miguel Rico\Documents\SharpDevelop Projects\Biblioteca Proyecto\Biblioteca\obj\Debug\Biblioteca.csproj.GenerateResource.Cache
+C:\Users\Miguel Rico\Documents\SharpDevelop Projects\Biblioteca Proyecto\Biblioteca\obj\Debug\Biblioteca.exe
+C:\Users\Miguel Rico\Documents\SharpDevelop Projects\Biblioteca Proyecto\Biblioteca\obj\Debug\Biblioteca.pdb
+C:\Users\Miguel Rico\Documents\SharpDevelop Projects\Biblioteca Proyecto\Biblioteca\obj\Debug\Biblioteca.Reportes.resources

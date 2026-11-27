@@ -84,6 +84,7 @@ namespace Biblioteca
 			this.btnReporte.TabIndex = 3;
 			this.btnReporte.Text = "Reportes";
 			this.btnReporte.UseVisualStyleBackColor = false;
+			this.btnReporte.Click += new System.EventHandler(this.BtnReporteClick);
 			// 
 			// btnCerrarSesion
 			// 
