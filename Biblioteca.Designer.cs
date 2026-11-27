@@ -64,7 +64,7 @@ namespace Biblioteca
 			this.btnPrestamos.TabIndex = 1;
 			this.btnPrestamos.Text = "Prestamos";
 			this.btnPrestamos.UseVisualStyleBackColor = false;
-			// 
+			this.btnPrestamos.Click += new System.EventHandler(this.BtnPrestamosClick);
 			// btnStock
 			// 
 			this.btnStock.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(192)))), ((int)(((byte)(128)))));

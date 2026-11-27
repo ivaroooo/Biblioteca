@@ -22,7 +22,7 @@ namespace Biblioteca
 	public static class ConexionDB
 	{
 		
-		private static string cadenaConexion = "Server=localhost;Database=biblioteca;Uid=root;Pwd=rico;";
+		private static string cadenaConexion = "Server=localhost;Database=biblioteca;Uid=root;Pwd=13579135ca;";
 
 		
 		public static MySqlConnection ObtenerConexion()

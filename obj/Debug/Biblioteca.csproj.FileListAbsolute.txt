@@ -15,3 +15,13 @@ C:\Users\Miguel Rico\Documents\SharpDevelop Projects\Biblioteca Proyecto\Bibliot
 C:\Users\Miguel Rico\Documents\SharpDevelop Projects\Biblioteca Proyecto\Biblioteca\obj\Debug\Biblioteca.exe
 C:\Users\Miguel Rico\Documents\SharpDevelop Projects\Biblioteca Proyecto\Biblioteca\obj\Debug\Biblioteca.pdb
 C:\Users\Miguel Rico\Documents\SharpDevelop Projects\Biblioteca Proyecto\Biblioteca\obj\Debug\Biblioteca.Reportes.resources
+C:\Users\a\Documents\Proyecto final German\Biblioteca-main\bin\Debug\Biblioteca.exe
+C:\Users\a\Documents\Proyecto final German\Biblioteca-main\bin\Debug\Biblioteca.pdb
+C:\Users\a\Documents\Proyecto final German\Biblioteca-main\obj\Debug\Biblioteca.csprojResolveAssemblyReference.cache
+C:\Users\a\Documents\Proyecto final German\Biblioteca-main\obj\Debug\Biblioteca.Administrador.resources
+C:\Users\a\Documents\Proyecto final German\Biblioteca-main\obj\Debug\Biblioteca.MainForm.resources
+C:\Users\a\Documents\Proyecto final German\Biblioteca-main\obj\Debug\Biblioteca.Reportes.resources
+C:\Users\a\Documents\Proyecto final German\Biblioteca-main\obj\Debug\Biblioteca.csproj.GenerateResource.Cache
+C:\Users\a\Documents\Proyecto final German\Biblioteca-main\obj\Debug\Biblioteca.exe
+C:\Users\a\Documents\Proyecto final German\Biblioteca-main\obj\Debug\Biblioteca.pdb
+C:\Users\a\Documents\Proyecto final German\Biblioteca-main\obj\Debug\Biblioteca.FrmMostrador.resources

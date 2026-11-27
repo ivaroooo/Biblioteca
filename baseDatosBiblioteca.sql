@@ -80,6 +80,7 @@ CREATE TABLE auditoria (
     datos_anteriores    TEXT NULL,
     datos_nuevos        TEXT NULL
 );
+
 -- ==========================================================
 -- 1. DATOS DE PRUEBA PARA USUARIOS DEL SISTEMA (Dulce
 -- ==========================================================
@@ -184,7 +185,9 @@ END $$
 DELIMITER ;
 
 
-
+-- ==========================================================
+-- 4. TRIGGERS DE VALIDACIÓN, FUNCIONES Y VISTAS (Migui)
+-- ==========================================================
 
 -- Trigger 1: Bloquear préstamo si no hay ejemplares suficientes
 DELIMITER $$
@@ -280,7 +283,6 @@ END $$
 DELIMITER ;
 
 
-
 -- Reporte 1: Libros más prestados
 CREATE VIEW vw_libros_mas_prestados AS
 SELECT 
@@ -314,4 +316,165 @@ HAVING dias_retraso > 0
 ORDER BY dias_retraso DESC;
 
 
+-- ==========================================================
+-- 5. PROCEDIMIENTOS ALMACENADOS DE PRÉSTAMOS, DEVOLUCIONES Y ESCÁNER (Iván)
+-- ==========================================================
+DELIMITER $$
 
+-- SP 1: Búsqueda por escáner o teclado (Punto E)
+CREATE PROCEDURE sp_buscar_ejemplar_por_codigo(
+    IN p_codigo_barras VARCHAR(50)
+)
+BEGIN
+    SELECT 
+        isbn,
+        codigo_barras,
+        nombre AS titulo,
+        autor,
+        categoria,
+        disponibilidad,
+        IF(disponibilidad > 0, 'Disponible', 'Sin Stock') AS estado
+    FROM libro
+    WHERE codigo_barras = p_codigo_barras 
+       OR isbn = p_codigo_barras
+    LIMIT 1;
+END $$
+
+-- SP 2: Consulta con parámetro OUT (Punto E)
+CREATE PROCEDURE sp_contar_copias_disponibles(
+    IN p_isbn VARCHAR(20),
+    OUT p_disponibles INT
+)
+BEGIN
+    SELECT disponibilidad INTO p_disponibles
+    FROM libro
+    WHERE isbn = p_isbn;
+    
+    IF p_disponibles IS NULL THEN
+        SET p_disponibles = 0;
+    END IF;
+END $$
+
+-- SP 3: Crear cabecera del préstamo con transacción (Puntos D y E)
+CREATE PROCEDURE sp_crear_cabecera_prestamo(
+    IN p_id_lector INT,
+    IN p_id_usuario_sistema INT,
+    IN p_fecha_devolucion DATE,
+    IN p_usuario_auditoria VARCHAR(50),
+    OUT p_id_prestamo_generado INT
+)
+BEGIN
+    DECLARE EXIT HANDLER FOR SQLEXCEPTION
+    BEGIN
+        ROLLBACK;
+        SET p_id_prestamo_generado = -1;
+        RESIGNAL;
+    END;
+
+    SET @usuario_actual = p_usuario_auditoria;
+
+    START TRANSACTION;
+        INSERT INTO prestamo (idLector, idUsuarioSistema, fechaDevolucion, estado)
+        VALUES (p_id_lector, p_id_usuario_sistema, p_fecha_devolucion, 'Activo');
+        
+        SET p_id_prestamo_generado = LAST_INSERT_ID();
+    COMMIT;
+END $$
+
+-- SP 4: Agregar detalle del préstamo y descontar stock con transacción (Puntos D y E)
+CREATE PROCEDURE sp_agregar_detalle_prestamo(
+    IN p_id_prestamo INT,
+    IN p_codigo_barras VARCHAR(50),
+    IN p_cantidad INT,
+    IN p_usuario_auditoria VARCHAR(50)
+)
+BEGIN
+    DECLARE v_isbn VARCHAR(20);
+    DECLARE v_stock INT;
+
+    DECLARE EXIT HANDLER FOR SQLEXCEPTION
+    BEGIN
+        ROLLBACK;
+        RESIGNAL;
+    END;
+
+    SET @usuario_actual = p_usuario_auditoria;
+
+    START TRANSACTION;
+        SELECT isbn, disponibilidad INTO v_isbn, v_stock
+        FROM libro
+        WHERE codigo_barras = p_codigo_barras
+        FOR UPDATE;
+
+        IF v_isbn IS NULL THEN
+            SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'El código de barras no existe.';
+        END IF;
+
+        IF v_stock < p_cantidad THEN
+            SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'No hay suficiente stock disponible para este libro.';
+        END IF;
+
+        INSERT INTO detallesPrestamo (idPrestamo, isbn, cantidad)
+        VALUES (p_id_prestamo, v_isbn, p_cantidad);
+
+        UPDATE libro 
+        SET disponibilidad = disponibilidad - p_cantidad
+        WHERE isbn = v_isbn;
+    COMMIT;
+END $$
+
+-- SP 5: Registrar devolución y restaurar stock con transacción (Puntos D y E)
+CREATE PROCEDURE sp_registrar_devolucion(
+    IN p_id_prestamo INT,
+    IN p_usuario_auditoria VARCHAR(50)
+)
+BEGIN
+    DECLARE v_estado VARCHAR(20);
+
+    DECLARE EXIT HANDLER FOR SQLEXCEPTION
+    BEGIN
+        ROLLBACK;
+        RESIGNAL;
+    END;
+
+    SET @usuario_actual = p_usuario_auditoria;
+
+    START TRANSACTION;
+        SELECT estado INTO v_estado
+        FROM prestamo
+        WHERE idPrestamo = p_id_prestamo
+        FOR UPDATE;
+
+        IF v_estado IS NULL THEN
+            SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'El folio de préstamo no existe.';
+        END IF;
+
+        IF v_estado = 'Devuelto' THEN
+            SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'Este préstamo ya fue devuelto anteriormente.';
+        END IF;
+
+        UPDATE prestamo
+        SET estado = 'Devuelto',
+            fechaDevolucionReal = CURDATE()
+        WHERE idPrestamo = p_id_prestamo;
+
+        UPDATE libro l
+        INNER JOIN detallesPrestamo dp ON l.isbn = dp.isbn
+        SET l.disponibilidad = l.disponibilidad + dp.cantidad
+        WHERE dp.idPrestamo = p_id_prestamo;
+    COMMIT;
+END $$
+DELIMITER ;
+
+
+-- ==========================================================
+-- 6. DATOS DE PRUEBA PARA LIBROS Y LECTORES (Iván)
+-- ==========================================================
+INSERT INTO libro (isbn, codigo_barras, nombre, autor, categoria, disponibilidad) VALUES
+('978-6073154604', '7501001001', 'Cien años de soledad', 'Gabriel García Márquez', 'Novela', 3),
+('978-8498387087', '7501001002', 'El Principito', 'Antoine de Saint-Exupéry', 'Fábula', 5),
+('978-6070728792', '7501001003', 'Clean Code', 'Robert C. Martin', 'Programación', 1);
+
+INSERT INTO lector (nombre, apellido, credencial, correo) VALUES
+('Carlos', 'Méndez', 'ALU-2026-01', 'carlos@itsur.edu.mx'),
+('Ana', 'Torres', 'ALU-2026-02', 'ana@itsur.edu.mx');

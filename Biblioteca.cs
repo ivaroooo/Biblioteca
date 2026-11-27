@@ -122,5 +122,12 @@ namespace Biblioteca
 			Reportes ventanaReportes = new Reportes();
 			ventanaReportes.ShowDialog();
 		}
+		
+		void BtnPrestamosClick(object sender, EventArgs e)
+		{
+			FrmMostrador mostrador = new FrmMostrador();
+			mostrador.ShowDialog();
+			CargarCatalogo(txtBuscar.Text.Trim());
+		}
 	}
 }
