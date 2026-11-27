@@ -80,3 +80,105 @@ CREATE TABLE auditoria (
     datos_anteriores    TEXT NULL,
     datos_nuevos        TEXT NULL
 );
+-- ==========================================================
+-- 1. DATOS DE PRUEBA PARA USUARIOS DEL SISTEMA (Dulce
+-- ==========================================================
+INSERT INTO usuarios_sistema (nombre_completo, username, password_hash, rol, estado) VALUES
+('Dulce Lopez', 'administrador', SHA2('clave123', 256), 'Administrador', 'Activo'),
+('Iván Orozco', 'bibliotecario', SHA2('clave123', 256), 'Bibliotecario', 'Activo'),
+('Miguel Rico', 'consulta_general', SHA2('clave123', 256), 'Consulta', 'Activo'),
+('Usuario Bloqueado', 'prueba_inactivo', SHA2('clave123', 256), 'Bibliotecario', 'Inactivo');
+
+-- ==========================================================
+-- 2. PROCEDIMIENTO ALMACENADO PARA EL LOGIN
+-- ==========================================================
+DELIMITER $$
+CREATE PROCEDURE iniciar_sesion(
+    IN p_username VARCHAR(50),
+    IN p_password_hash VARCHAR(255),
+    IN p_rol VARCHAR(20)
+)
+BEGIN
+    SELECT idUsuario, nombre_completo, username, rol, estado
+    FROM usuarios_sistema
+    WHERE username = p_username
+      AND password_hash = p_password_hash
+      AND rol = p_rol
+    LIMIT 1;
+END $$
+
+-- ==========================================================
+-- 3. TRIGGERS DE AUDITORÍA (Dulce
+-- Registran automáticamente cambios en libro y prestamo
+-- ==========================================================
+CREATE TRIGGER trg_auditoria_libro_update
+AFTER UPDATE ON libro
+FOR EACH ROW
+BEGIN
+    IF NOT (OLD.disponibilidad <=> NEW.disponibilidad) 
+       OR NOT (OLD.nombre <=> NEW.nombre) 
+       OR NOT (OLD.categoria <=> NEW.categoria) THEN
+        INSERT INTO auditoria (
+            tabla_afectada,
+            tipo_operacion,
+            fecha_hora,
+            usuario_responsable,
+            datos_anteriores,
+            datos_nuevos
+        ) VALUES (
+            'libro',
+            'UPDATE',
+            NOW(),
+            IFNULL(@usuario_actual, CURRENT_USER()),
+            CONCAT('ISBN: ', OLD.isbn, ' | Título: ', OLD.nombre, ' | Stock: ', OLD.disponibilidad),
+            CONCAT('ISBN: ', NEW.isbn, ' | Título: ', NEW.nombre, ' | Stock: ', NEW.disponibilidad)
+        );
+    END IF;
+END $$
+
+-- Trigger 2: Baja o eliminación de un libro del catálogo
+CREATE TRIGGER trg_auditoria_libro_delete
+AFTER DELETE ON libro
+FOR EACH ROW
+BEGIN
+    INSERT INTO auditoria (
+        tabla_afectada,
+        tipo_operacion,
+        fecha_hora,
+        usuario_responsable,
+        datos_anteriores,
+        datos_nuevos
+    ) VALUES (
+        'libro',
+        'DELETE',
+        NOW(),
+        IFNULL(@usuario_actual, CURRENT_USER()),
+        CONCAT('ISBN: ', OLD.isbn, ' | Código: ', OLD.codigo_barras, ' | Título: ', OLD.nombre, ' | Stock previo: ', OLD.disponibilidad),
+        'ELIMINADO DEL CATÁLOGO'
+    );
+END $$
+
+-- Trigger 3: Cambio de estado en prestamoss
+CREATE TRIGGER trg_auditoria_prestamo_update
+AFTER UPDATE ON prestamo
+FOR EACH ROW
+BEGIN
+    IF NOT (OLD.estado <=> NEW.estado) THEN
+        INSERT INTO auditoria (
+            tabla_afectada,
+            tipo_operacion,
+            fecha_hora,
+            usuario_responsable,
+            datos_anteriores,
+            datos_nuevos
+        ) VALUES (
+            'prestamo',
+            'UPDATE',
+            NOW(),
+            IFNULL(@usuario_actual, CURRENT_USER()),
+            CONCAT('Préstamo #', OLD.idPrestamo, ' | Estado: ', OLD.estado),
+            CONCAT('Préstamo #', NEW.idPrestamo, ' | Estado: ', NEW.estado, ' | Devuelto: ', IFNULL(NEW.fechaDevolucionReal, 'N/A'))
+        );
+    END IF;
+END $$
+DELIMITER ;
